@@ -2,144 +2,122 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Universal Hash Cracker - By Abdullah Suleman</title>
+  <title>Simple Hash Cracker - By Abdullah Suleman</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
     body {
-      font-family: 'Share Tech Mono', monospace;
-      background: #000;
-      color: #00ff00;
-      margin: 0;
-      padding: 20px;
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      color: #333;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
 
-    h1, h2 {
-      color: #00ff00;
-      text-shadow: 0 0 5px #00ff00;
+    h1 {
+      color: #222;
     }
 
-    input, button, select {
-      background-color: #000;
-      color: #0f0;
-      border: 1px solid #0f0;
+    .intro {
+      background-color: #e0ffe0;
+      border-left: 5px solid green;
+      padding: 15px;
+      margin-bottom: 20px;
+      font-size: 18px;
+    }
+
+    input, select, button {
       padding: 10px;
-      margin: 5px 0;
+      margin: 10px 0;
+      width: 100%;
+      max-width: 400px;
+      border: 1px solid #ccc;
       border-radius: 5px;
-      font-family: inherit;
+      font-size: 16px;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
     }
 
     button:hover {
-      background-color: #0f0;
-      color: #000;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    .toolbox {
-      background-color: rgba(0, 255, 0, 0.05);
-      padding: 20px;
-      margin-top: 20px;
-      border: 1px solid #0f0;
-      border-radius: 10px;
-      box-shadow: 0 0 10px #00ff00;
+      background-color: #0056b3;
     }
 
     .result {
-      margin-top: 10px;
-      color: #0f0;
+      margin-top: 20px;
+      font-weight: bold;
+      color: green;
     }
 
-    #loader {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw; height: 100vh;
-      background: black;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-    }
-
-    .atom-spinner {
-      width: 60px;
-      height: 60px;
-      border: 3px solid transparent;
-      border-top: 3px solid #00ff00;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-
-    .hidden {
-      display: none;
+    footer {
+      margin-top: auto;
+      text-align: center;
+      padding: 20px;
+      background-color: #e9ecef;
+      font-size: 14px;
+      color: #555;
+      border-top: 1px solid #ccc;
     }
   </style>
 </head>
 <body>
 
-  <div id="loader">
-    <div class="atom-spinner"></div>
+  <div class="intro">
+    👋 <strong>Hello to the Tech Pakistan Next Owner – <span style="color:#007bff;">ABDULLAH SULEMAN</span></strong><br>
+    🔧 Tool proudly made by Tech Pakistan | For educational purposes only.
   </div>
 
-  <h1>👋 Hello to the Tech Pakistan Next Owner – <span style="color:#00ffff;">ABDULLAH SULEMAN</span></h1>
+  <h1>🔍 Simple Hash Cracker</h1>
 
-  <div class="toolbox">
-    <h2>🔓 Universal Hash Cracker</h2>
-    <input type="text" id="hashInput" placeholder="Enter hash here">
-    <select id="hashType">
-      <option value="MD5">MD5</option>
-      <option value="SHA-1">SHA-1</option>
-      <option value="SHA-256">SHA-256</option>
-      <option value="SHA-384">SHA-384</option>
-      <option value="SHA-512">SHA-512</option>
-    </select>
-    <button onclick="crackHash()">Crack Now</button>
-    <div class="result" id="result"></div>
-  </div>
+  <input type="text" id="hashInput" placeholder="Enter hash">
+  
+  <select id="hashType">
+    <option value="MD5">MD5</option>
+    <option value="SHA-1">SHA-1</option>
+    <option value="SHA-256">SHA-256</option>
+  </select>
 
-  <div class="toolbox">
-    <h2>🔐 What is Hashing, Salting, and Password Security?</h2>
-    <p><b>Hashing:</b> One-way encryption of data to ensure integrity and protect passwords.</p>
-    <p><b>Salting:</b> A random string added to passwords before hashing to make them unique.</p>
-    <p><b>Password Security:</b> Use strong hashes like bcrypt/argon2 and never store plain passwords.</p>
-  </div>
+  <button onclick="crackHash()">Crack Hash</button>
+
+  <div class="result" id="result"></div>
+
+  <footer>
+    🔧 Made with ❤️ by Abdullah Suleman – Tech Pakistan
+  </footer>
 
   <script>
-    window.onload = function () {
-      setTimeout(() => {
-        document.getElementById("loader").classList.add("hidden");
-      }, 2000);
-    };
-
-    const wordlist = ['password', '123456', 'admin', 'welcome', 'qwerty', 'letmein', 'hello', 'techpakistan'];
+    const wordlist = ['password', '123456', 'admin', 'qwerty', 'welcome'];
 
     async function crackHash() {
       const inputHash = document.getElementById("hashInput").value.trim().toLowerCase();
       const hashType = document.getElementById("hashType").value;
       const result = document.getElementById("result");
-      result.textContent = "🔍 Searching known hashes...";
+
+      result.textContent = "⏳ Cracking...";
 
       for (let word of wordlist) {
         const hash = await getHash(word, hashType);
         if (hash === inputHash) {
-          result.textContent = `✅ Cracked: "${word}"`;
+          result.textContent = `✅ Match found: "${word}"`;
           return;
         }
       }
 
-      result.textContent = "❌ Not found in this small wordlist.";
+      result.textContent = "❌ No match found in wordlist.";
     }
 
     async function getHash(str, type) {
       const encoder = new TextEncoder();
       const data = encoder.encode(str);
+
+      if (type === "MD5") {
+        return await md5(str);
+      }
+
       const algo = type.toUpperCase();
-
-      if (algo === 'MD5') return await md5(str);
-
       const hashBuffer = await crypto.subtle.digest(algo, data);
       const hashArray = Array.from(new Uint8Array(hashBuffer));
       return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
