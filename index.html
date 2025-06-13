@@ -4,32 +4,56 @@
   <meta charset="UTF-8">
   <title>Universal Hash Cracker - By Abdullah Suleman</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
     body {
-      font-family: Arial, sans-serif;
-      background: #0d1117;
-      color: #c9d1d9;
+      font-family: 'Share Tech Mono', monospace;
+      background: #000;
+      color: #00ff00;
       margin: 0;
       padding: 20px;
     }
 
-    h1, h2 { color: #58a6ff; }
+    h1, h2 {
+      color: #00ff00;
+      text-shadow: 0 0 5px #00ff00;
+    }
 
     input, button, select {
-      padding: 10px; margin: 5px 0; border-radius: 6px; border: none;
+      background-color: #000;
+      color: #0f0;
+      border: 1px solid #0f0;
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 5px;
+      font-family: inherit;
+    }
+
+    button:hover {
+      background-color: #0f0;
+      color: #000;
+      cursor: pointer;
+      font-weight: bold;
     }
 
     .toolbox {
-      background: #161b22; padding: 20px; border-radius: 10px; margin-top: 20px;
+      background-color: rgba(0, 255, 0, 0.05);
+      padding: 20px;
+      margin-top: 20px;
+      border: 1px solid #0f0;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #00ff00;
     }
 
-    .result { margin-top: 10px; color: lime; }
+    .result {
+      margin-top: 10px;
+      color: #0f0;
+    }
 
-    /* Loader styles */
     #loader {
       position: fixed;
       top: 0; left: 0;
       width: 100vw; height: 100vh;
-      background: #000;
+      background: black;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -40,7 +64,7 @@
       width: 60px;
       height: 60px;
       border: 3px solid transparent;
-      border-top: 3px solid #58a6ff;
+      border-top: 3px solid #00ff00;
       border-radius: 50%;
       animation: spin 1s linear infinite;
     }
@@ -56,60 +80,57 @@
 </head>
 <body>
 
-  <!-- Loader -->
   <div id="loader">
     <div class="atom-spinner"></div>
   </div>
 
-  <!-- Main Page Content -->
-  <h1>👋 Hello to the Tech Pakistan Next Owner – <span style="color:#ff7b72;">ABDULLAH SULEMAN</span></h1>
+  <h1>👋 Hello to the Tech Pakistan Next Owner – <span style="color:#00ffff;">ABDULLAH SULEMAN</span></h1>
 
   <div class="toolbox">
     <h2>🔓 Universal Hash Cracker</h2>
-    <input type="text" id="hashInput" placeholder="Enter a hash here">
+    <input type="text" id="hashInput" placeholder="Enter hash here">
     <select id="hashType">
       <option value="MD5">MD5</option>
-      <option value="SHA-1">SHA1</option>
-      <option value="SHA-256">SHA256</option>
+      <option value="SHA-1">SHA-1</option>
+      <option value="SHA-256">SHA-256</option>
+      <option value="SHA-384">SHA-384</option>
+      <option value="SHA-512">SHA-512</option>
     </select>
-    <button onclick="crackHash()">Crack Hash</button>
+    <button onclick="crackHash()">Crack Now</button>
     <div class="result" id="result"></div>
   </div>
 
   <div class="toolbox">
-    <h2>🔐 About Hashing, Salting, and Password Security</h2>
-    <p><b>Hashing:</b> A one-way conversion of data to fixed-length codes. Used in passwords and data integrity.</p>
-    <p><b>Salting:</b> Adding random strings to passwords before hashing to make them stronger and unique.</p>
-    <p><b>Password Security:</b> Store only salted and hashed passwords using strong algorithms (like bcrypt, Argon2).</p>
+    <h2>🔐 What is Hashing, Salting, and Password Security?</h2>
+    <p><b>Hashing:</b> One-way encryption of data to ensure integrity and protect passwords.</p>
+    <p><b>Salting:</b> A random string added to passwords before hashing to make them unique.</p>
+    <p><b>Password Security:</b> Use strong hashes like bcrypt/argon2 and never store plain passwords.</p>
   </div>
 
   <script>
-    // Simple atom loader timer
     window.onload = function () {
       setTimeout(() => {
         document.getElementById("loader").classList.add("hidden");
-      }, 2000); // Show loader for 2 seconds
+      }, 2000);
     };
 
-    // Hash Cracker Code
-    const wordlist = ['password', '123456', 'admin', 'welcome', 'qwerty'];
+    const wordlist = ['password', '123456', 'admin', 'welcome', 'qwerty', 'letmein', 'hello', 'techpakistan'];
 
     async function crackHash() {
       const inputHash = document.getElementById("hashInput").value.trim().toLowerCase();
       const hashType = document.getElementById("hashType").value;
       const result = document.getElementById("result");
-
-      result.textContent = "Cracking...";
+      result.textContent = "🔍 Searching known hashes...";
 
       for (let word of wordlist) {
         const hash = await getHash(word, hashType);
         if (hash === inputHash) {
-          result.textContent = `✅ Cracked! Hash belongs to: "${word}"`;
+          result.textContent = `✅ Cracked: "${word}"`;
           return;
         }
       }
 
-      result.textContent = "❌ Hash not found in small wordlist.";
+      result.textContent = "❌ Not found in this small wordlist.";
     }
 
     async function getHash(str, type) {
@@ -117,9 +138,7 @@
       const data = encoder.encode(str);
       const algo = type.toUpperCase();
 
-      if (algo === 'MD5') {
-        return await md5(str);
-      }
+      if (algo === 'MD5') return await md5(str);
 
       const hashBuffer = await crypto.subtle.digest(algo, data);
       const hashArray = Array.from(new Uint8Array(hashBuffer));
@@ -127,11 +146,11 @@
     }
 
     async function md5(str) {
-      const md5Script = 'https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js';
+      const scriptURL = 'https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js';
       if (typeof window.md5 === 'undefined') {
         await new Promise(resolve => {
           const script = document.createElement('script');
-          script.src = md5Script;
+          script.src = scriptURL;
           script.onload = resolve;
           document.body.appendChild(script);
         });
